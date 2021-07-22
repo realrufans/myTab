@@ -8,7 +8,9 @@ const weatherDiv = document.getElementById("weatherDiv");
 
 // Display coins from the localStroage
 function renderCoinList() {
-    var items = JSON.parse(localStorage.getItem("details"))
+    let items = []
+    items = JSON.parse(localStorage.getItem("details"))
+
 
     let html = "";
 
