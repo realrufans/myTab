@@ -160,8 +160,6 @@ navigator.geolocation.getCurrentPosition((position) => {
             return response.json();
         })
         .then((data) => {
-
-            console.log(data)
             const icon = data.weather[0].icon;
             const temp = data.main.temp;
             const Celcius_value = Math.floor(((temp - 32) * 5) / 9);
