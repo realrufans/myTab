@@ -14,8 +14,11 @@ function renderCoinList() {
 
     let html = "";
 
-    items.forEach(function(e) {
-        let coin = e
+    items.map(coin => {
+
+
+
+
 
 
         html += `
