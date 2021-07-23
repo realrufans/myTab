@@ -8,21 +8,21 @@ const weatherDiv = document.getElementById("weatherDiv");
 
 // Display coins from the localStroage
 function renderCoinList() {
-
-    const items = JSON.parse(localStorage.getItem("details"));
-
-
+    let items = JSON.parse(localStorage.getItem("details"))
 
 
 
     let html = "";
 
-    for (var i = 0; i < items.length; i++) {
+    items.forEach(function(e) {
+        let coin = e
+
+
         html += `
-            <p>${items[i].name}: <span class="coin_prices">$${items[i].price}</span></p>
+            <p>${coin.name}: <span class="coin_prices">$${coin.price}</span></p>
 
             `;
-    }
+    })
     coin_pricesEl.innerHTML = html;
 }
 
