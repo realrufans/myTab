@@ -72,6 +72,7 @@ add_btn.addEventListener("click", fectchit);
 
 function fectchit() {
     cryptoPrice(input.value.toLowerCase());
+    input.value = ''
 }
 
 
@@ -94,6 +95,7 @@ function remove_coin() {
 
     items = JSON.stringify(items);
     localStorage.setItem("details", items);
+    input.value = ''
 
     renderCoinList();
 }
