@@ -5,26 +5,38 @@ const input = document.getElementById("user_Crypto_Input");
 const image_Credit = document.getElementById("image_Credit");
 const centerWidget = document.getElementById("centerWidget");
 const weatherDiv = document.getElementById("weatherDiv");
+const show_my_weather = document.getElementById("show_my_weather");
 
 // Display coins from the localStroage
 function renderCoinList() {
-    const items = JSON.parse(localStorage.getItem("details"))
+    const coins = JSON.parse(localStorage.getItem("details"))
 
     let html = "";
 
-    if (!items == null) {
-        items.map(coin => {
+    if (coins === null || coins.length === 0) {
+
+        coin_pricesEl.innerHTML = `<p>your coin list is empty</p>`
+
+    } else if (coins.length > -1) {
+
+        for (let coin of coins) {
+            console.log(coin)
 
             html += `
-            <p>${coin.name}: <span class="coin_prices">$${coin.price}</span></p>
+                <p>${coin.name}: <span class="coin_prices">$${coin.price}</span></p>
+    
+                `;
 
-            `;
-        })
+        }
+        coin_pricesEl.innerHTML = html;
+
     }
-    coin_pricesEl.innerHTML = html;
+
+
 }
 
-renderCoinList();
+renderCoinList()
+
 
 // fetch a coin enterd by the user
 
@@ -69,19 +81,25 @@ remove_btn.addEventListener("click", remove_coin);
 function remove_coin() {
 
 
-    var items = JSON.parse(localStorage.getItem("details"));
+    let items = JSON.parse(localStorage.getItem("details"));
+
+
 
     for (var i = 0; i < items.length; i++) {
         if (items[i].name === input.value.toLowerCase()) {
             items.splice(i, 1);
         }
+
     }
 
-    items = JSON.stringify(items); //Restoring object left into items again
-
+    items = JSON.stringify(items);
     localStorage.setItem("details", items);
+
     renderCoinList();
 }
+
+
+
 
 // fetch random image
 function random_Background_Img() {
@@ -139,7 +157,7 @@ function current_time() {
     centerWidget.innerHTML = `
     <div class="date_Details">
     <p id='time'>${time_and_date.getHours()}:${time_and_date.getMinutes()}:${time_and_date.getSeconds()}</p>
-    <p>${day}, ${time_and_date.getMonth()} ${month}</p>
+    <p>${day}, ${time_and_date.getDate()} ${month}</p>
 </div>
     `;
 }
@@ -149,25 +167,47 @@ setInterval(current_time, 1000);
 
 
 // fectch user location
-navigator.geolocation.getCurrentPosition((position) => {
-    const lat = position.coords.latitude;
-    const long = position.coords.longitude;
+show_my_weather.addEventListener('click', showMyweather)
+showMyweather()
 
-    fetch(
-            `https://apis.scrimba.com/openweathermap/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial`
-        )
-        .then((response) => {
-            if (!response.ok) {
-                throw Error('something went wrong')
-            }
-            return response.json();
-        })
-        .then((data) => {
-            const icon = data.weather[0].icon;
-            const temp = data.main.temp;
-            const Celcius_value = Math.floor(((temp - 32) * 5) / 9);
 
-            weatherDiv.innerHTML = `
+function showMyweather() {
+
+    navigator.geolocation.watchPosition(function(position) {
+            show_my_weather.style.display = 'none'
+            triggerLocation()
+
+        },
+        function(error) {
+            if (error.code == error.PERMISSION_DENIED)
+                show_my_weather.style.display = 'block'
+            weatherDiv.innerHTML = ` <p>I can't display your location until  you grant me the permission from your broswer setting</p>`
+
+        });
+
+}
+
+
+function triggerLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const long = position.coords.longitude;
+
+        fetch(
+                `https://apis.scrimba.com/openweathermap/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial`
+            )
+            .then((response) => {
+                if (!response.ok) {
+                    throw Error('something went wrong')
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const icon = data.weather[0].icon;
+                const temp = data.main.temp;
+                const Celcius_value = Math.floor(((temp - 32) * 5) / 9);
+
+                weatherDiv.innerHTML = `
             <div id="wIcon_with_DEegree" class="wIcon_with_DEegree">
             <img src="http://openweathermap.org/img/wn/${icon}@2x.png" />
             <p id="weather_value">
@@ -180,8 +220,9 @@ navigator.geolocation.getCurrentPosition((position) => {
         </div>
         <p id="location_name">${data.name}, ${data.sys.country}</p>
             `;
-        })
-        .catch(err => {
-            alert('PLease check your internet connection')
-        })
-});
+            })
+            .catch(err => {
+                alert('PLease check your internet connection')
+            })
+    });
+}

@@ -57,9 +57,12 @@ body {
 }
 
 .btn {
-    background-image: url(../icons/minus.png);
-    background-position: center;
-    background-size: cover;
+    font-size: 1rem;
+    width: 2rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
 }
 
 button {
@@ -108,7 +111,7 @@ button {
 
 .coin_Prices {
     margin-bottom: 0.2em;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 .image_Credit {
